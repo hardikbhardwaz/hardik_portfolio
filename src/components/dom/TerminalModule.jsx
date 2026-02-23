@@ -27,22 +27,30 @@ const TerminalModule = () => {
         if (!isInView) return;
 
         let currentLine = 0;
+        let timeoutId;
+        let isActive = true;
         setIsTyping(true);
 
         const typeLine = () => {
+            if (!isActive) return;
             if (currentLine < bootSequence.length) {
                 setLines(prev => [...prev, bootSequence[currentLine]]);
                 currentLine++;
-                // Randomize typing speed for realism (faster for some lines, slower for others)
+                // Randomize typing speed for realism
                 const delay = Math.random() * 300 + 100;
-                setTimeout(typeLine, delay);
+                timeoutId = setTimeout(typeLine, delay);
             } else {
                 setIsTyping(false);
             }
         };
 
         // Start the typing sequence after a short delay
-        setTimeout(typeLine, 500);
+        timeoutId = setTimeout(typeLine, 500);
+
+        return () => {
+            isActive = false;
+            clearTimeout(timeoutId);
+        };
     }, [isInView]);
 
     return (
@@ -62,13 +70,13 @@ const TerminalModule = () => {
                 </div>
 
                 {/* Terminal Window Content */}
-                <div className="p-6 md:p-10 font-mono text-xs md:text-sm lg:text-base leading-relaxed text-cyan-300 min-h-[400px]">
+                <div className="p-4 md:p-10 font-mono text-[10px] md:text-sm lg:text-base leading-relaxed text-cyan-300 min-h-[300px] md:min-h-[400px]">
                     {lines.map((line, index) => (
                         <motion.div
                             key={index}
                             initial={{ opacity: 0, x: -10 }}
                             animate={{ opacity: 1, x: 0 }}
-                            className={`mb-2 ${line.startsWith('[SYS]') ? 'text-purple-400' : line.startsWith('[AI]') ? 'text-green-400' : 'text-cyan-300'}`}
+                            className={`mb-2 ${line?.startsWith('[SYS]') ? 'text-purple-400' : line?.startsWith('[AI]') ? 'text-green-400' : 'text-cyan-300'}`}
                         >
                             {line}
                         </motion.div>

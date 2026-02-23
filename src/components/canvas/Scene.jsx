@@ -4,19 +4,25 @@ import { Environment } from '@react-three/drei';
 import { EffectComposer, Bloom, ChromaticAberration, Noise } from '@react-three/postprocessing';
 import { BlendFunction } from 'postprocessing';
 import * as THREE from 'three';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import LiquidBlob from './LiquidBlob';
 import MouseTrail from './MouseTrail';
 import ParticleBackground from './ParticleBackground';
 
 import { useScroll, useTransform } from 'framer-motion';
 
-// Safe extraction of camera physics mapped strictly to document height
+// Safe extraction of camera physics mapped strictly to document height and screen width
 const CameraRig = () => {
     const { scrollYProgress } = useScroll();
+    const { viewport } = useThree();
+
+    // Dynamic Z-Depth based on aspect ratio (Portrait mobile phones need to pull the camera WAY back)
+    const isMobileAspect = viewport.width < viewport.height;
+    const startZ = isMobileAspect ? 80 : 45; // Pull back massively on phones so the blob fits horizontally
+    const endZ = isMobileAspect ? 10 : 0; // Don't dive as dangerously close on phones
+
     // Maps the 0-100% total page scroll safely into the 3D Z-depth.
-    // Starts at 45 (zoomed out), ends at 0 (deep inside the particle field, but safely in front of the Blob at -25)
-    const targetZ = useTransform(scrollYProgress, [0, 1], [45, 0]);
+    const targetZ = useTransform(scrollYProgress, [0, 1], [startZ, endZ]);
 
     useFrame((state) => {
         // Pushing the camera safely into the Z axis without overshooting
@@ -53,13 +59,26 @@ const Scene = () => {
 
                 <MouseTrail />
 
-                {/* The Core Advanced Shader Component and Particle Field */}
                 <Suspense fallback={null}>
-                    <ParticleBackground count={1500} />
-                    <LiquidBlob />
+                    <SceneContent />
                 </Suspense>
+            </Canvas>
+        </div>
+    );
+};
 
-                {/* Cinematic Post-Processing Pipeline - Multisampling disabled to save VRAM on Retina displays */}
+// Inner component layer required because useThree() hooks MUST be inside a Canvas parent
+const SceneContent = () => {
+    const { viewport } = useThree();
+    const isMobileAspect = viewport.width < viewport.height;
+
+    return (
+        <>
+            <ParticleBackground count={isMobileAspect ? 800 : 1500} />
+            <LiquidBlob />
+
+            {/* STRICT HARDWARE EXCLUSION: Post-processing crashes low-VRAM mobile browsers heavily. Only render on Desktop. */}
+            {!isMobileAspect && (
                 <EffectComposer disableNormalPass multisampling={0}>
                     <Bloom
                         luminanceThreshold={0.5}
@@ -68,8 +87,8 @@ const Scene = () => {
                         mipmapBlur
                     />
                     <ChromaticAberration
-                        blendFunction={BlendFunction.NORMAL} // blend mode
-                        offset={new THREE.Vector2(0.002, 0.002)} // color offset
+                        blendFunction={BlendFunction.NORMAL}
+                        offset={new THREE.Vector2(0.002, 0.002)}
                         radialModulation={true}
                         modulationOffset={0.5}
                     />
@@ -79,8 +98,8 @@ const Scene = () => {
                         blendFunction={BlendFunction.SCREEN}
                     />
                 </EffectComposer>
-            </Canvas>
-        </div>
+            )}
+        </>
     );
 };
 

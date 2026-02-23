@@ -40,7 +40,7 @@ function App() {
             {/* Main Name pushed into Z-depth on scroll */}
             <motion.h1
               style={{ y: heroY, scale: heroScale, opacity: heroOpacity }}
-              className="text-[12vw] md:text-[10vw] font-black tracking-tighter leading-[0.85] text-center text-3d-glow flex flex-col items-center"
+              className="text-6xl md:text-[10vw] font-black tracking-tighter leading-[0.85] text-center text-3d-glow flex flex-col items-center"
             >
               <GlitchText text="HARDIK" as="span" className="block" />
               <GlitchText text="SHARMA" as="span" className="block" />
@@ -58,13 +58,13 @@ function App() {
           </div>
 
           {/* About Section */}
-          <div className="min-h-[150vh] flex flex-col justify-center px-12 md:px-24">
+          <div className="min-h-[150vh] flex flex-col justify-center px-6 md:px-24">
             <div className="max-w-4xl mx-auto flex flex-col items-center text-center">
               <KineticText
                 text="01 — ABOUT & SKILLS"
-                className="text-xl tracking-[0.3em] font-bold text-cyan-400 opacity-80 mb-8"
+                className="text-md md:text-xl tracking-[0.3em] font-bold text-cyan-400 opacity-80 mb-6 md:mb-8"
               />
-              <p className="text-3xl md:text-5xl leading-tight font-medium opacity-90 max-w-3xl">
+              <p className="text-xl md:text-5xl leading-tight font-medium opacity-90 max-w-3xl">
                 I build digital experiences that live at the intersection of extreme mathematics and elite aesthetics.
               </p>
 
@@ -85,13 +85,13 @@ function App() {
           <TerminalModule />
 
           {/* Work Section */}
-          <div id="work" className="min-h-[150vh] flex flex-col justify-center px-12 md:px-24 scroll-mt-24">
+          <div id="work" className="min-h-[150vh] flex flex-col justify-center px-6 md:px-24 scroll-mt-24">
             <div className="w-full flex flex-col items-center text-center mx-auto">
               <KineticText
                 text="02 — SELECTED WORKS"
-                className="text-xl tracking-[0.3em] font-bold text-cyan-400 opacity-80 mb-4 max-w-4xl"
+                className="text-md md:text-xl tracking-[0.3em] font-bold text-cyan-400 opacity-80 mb-4 max-w-4xl"
               />
-              <p className="tracking-widest opacity-50 text-sm max-w-xl py-1 mb-8">
+              <p className="tracking-widest opacity-50 text-[10px] md:text-sm max-w-xl py-1 mb-6 md:mb-8">
                 EXPLORE THE TECHNICAL ARCHITECTURE BY DISCIPLINE
               </p>
               <WorksGallery />

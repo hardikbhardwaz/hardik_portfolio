@@ -2,7 +2,7 @@ import React from 'react';
 
 const PerimeterLights = () => {
     return (
-        <div className="fixed inset-0 pointer-events-none z-40 overflow-hidden mix-blend-screen">
+        <div className="hidden md:block fixed inset-0 pointer-events-none z-40 overflow-hidden mix-blend-screen">
             {/* Left AI Perimeter Core */}
             <div className="absolute left-0 top-0 w-2 md:w-4 h-full">
                 {/* Physical Glass Tube */}

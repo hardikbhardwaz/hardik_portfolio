@@ -40,9 +40,9 @@ const Experience = () => {
         <section ref={targetRef} className="relative h-[300vh] bg-black pointer-events-auto">
             {/* The sticky container stays glued to the screen while we scroll the 300vh height */}
             <div className="sticky top-0 flex h-screen items-center overflow-hidden">
-                <motion.div style={{ x }} className="flex gap-12 px-24">
+                <motion.div style={{ x }} className="flex gap-6 md:gap-12 px-6 md:px-24">
                     {/* Intro Card */}
-                    <div className="min-w-[40vw] flex flex-col justify-center border-l-2 border-green-500/50 pl-12">
+                    <div className="min-w-[80vw] md:min-w-[40vw] flex flex-col justify-center border-l-2 border-green-500/50 pl-6 md:pl-12">
                         <h2 className="text-sm tracking-[0.4em] font-bold text-green-400 opacity-80 mb-4">EXPERIENCE</h2>
                         <h3 className="text-5xl md:text-7xl font-black uppercase leading-none tracking-tighter">
                             THE <br /><span className="text-transparent" style={{ WebkitTextStroke: '2px white' }}>SERVICES</span>
@@ -51,16 +51,16 @@ const Experience = () => {
 
                     {/* Service Cards */}
                     {services.map((service, index) => (
-                        <div key={index} className="min-w-[40vw] group relative h-[50vh] flex flex-col justify-between p-12 overflow-hidden border border-white/10 bg-white/5 backdrop-blur-md rounded-2xl hover:bg-white/10 transition-colors duration-500">
-                            <div className="absolute top-0 right-0 p-8 text-8xl font-black text-white/5 group-hover:text-green-500/10 transition-colors duration-500 leading-none">
+                        <div key={index} className="min-w-[80vw] md:min-w-[40vw] group relative h-[60vh] md:h-[50vh] flex flex-col justify-between p-6 md:p-12 overflow-hidden border border-white/10 bg-white/5 backdrop-blur-md rounded-2xl hover:bg-white/10 transition-colors duration-500">
+                            <div className="absolute top-0 right-0 p-4 md:p-8 text-6xl md:text-8xl font-black text-white/5 group-hover:text-green-500/10 transition-colors duration-500 leading-none">
                                 {service.number}
                             </div>
 
-                            <h4 className="text-2xl md:text-4xl font-bold uppercase tracking-tight max-w-[80%] relative z-10">
+                            <h4 className="text-xl md:text-4xl font-bold uppercase tracking-tight max-w-[80%] relative z-10">
                                 {service.title}
                             </h4>
 
-                            <p className="text-lg opacity-60 font-medium relative z-10 max-w-[90%]">
+                            <p className="text-sm md:text-lg opacity-60 font-medium relative z-10 max-w-[95%] md:max-w-[90%]">
                                 {service.description}
                             </p>
 

@@ -103,7 +103,7 @@ const WorksGallery = () => {
                     <button
                         key={category}
                         onClick={() => setActiveCategory(category)}
-                        className={`relative px-6 py-2 text-xs md:text-sm tracking-[0.2em] font-medium uppercase transition-all duration-300 pointer-events-auto ${activeCategory === category ? "text-cyan-300" : "text-white/50 hover:text-white/80"
+                        className={`relative px-3 md:px-6 py-2 text-[10px] md:text-sm tracking-[0.2em] font-medium uppercase transition-all duration-300 pointer-events-auto ${activeCategory === category ? "text-cyan-300" : "text-white/50 hover:text-white/80"
                             }`}
                     >
                         {category}
@@ -119,8 +119,8 @@ const WorksGallery = () => {
                 ))}
             </div>
 
-            {/* Dynamic Gallery Grid (Pop Layout to prevent jumping during filter transitions) */}
-            <motion.div layout className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-8 pb-32 border-b border-white/10 relative z-20">
+            {/* Dynamic Gallery Grid */}
+            <motion.div layout className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 pb-32 border-b border-white/10 relative z-20">
                 <AnimatePresence mode="popLayout">
                     {filteredProjects.map((project) => (
                         <ProjectCard key={project.id} project={project} />
