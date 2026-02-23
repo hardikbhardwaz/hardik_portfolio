@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #ff3b3b;
+  --color-dark: #0a0a0a;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background-color: #050505;
+  color: white;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.05em;
+}
+
+/* Hide default cursor to use custom cursor */
+* {
+  cursor: none !important;
+  box-sizing: border-box;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+}
+
+/* A subtle gradient overlay to blend 3D and DOM */
+.vignette {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: radial-gradient(circle at center, transparent 40%, rgba(0, 0, 0, 0.8) 100%);
+  z-index: 10;
+}
+
+/* Infinte Scrolling Marquee */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 20s linear infinite;
+  display: flex;
+  width: max-content;
+}
+
+/* Modern 3D Glowing Text Animation */
+@keyframes glow3d {
+
+  0%,
+  100% {
+    text-shadow:
+      0px 1px 0px #0a0a0a,
+      0px 2px 0px #080808,
+      0px 3px 0px #060606,
+      0px 4px 0px #040404,
+      0px 5px 0px #020202,
+      0px 10px 20px rgba(0, 255, 128, 0.4),
+      0px 15px 40px rgba(0, 255, 128, 0.2);
+    transform: translateY(0px) scale(1);
+  }
+
+  50% {
+    text-shadow:
+      0px 1px 0px #0a0a0a,
+      0px 2px 0px #080808,
+      0px 3px 0px #060606,
+      0px 4px 0px #040404,
+      0px 5px 0px #020202,
+      0px 6px 0px #010101,
+      0px 15px 30px rgba(0, 255, 255, 0.6),
+      0px 20px 60px rgba(0, 255, 255, 0.4);
+    transform: translateY(-4px) scale(1.01);
+  }
+}
+
+.text-3d-glow {
+  color: #ffffff;
+  animation: glow3d 4s ease-in-out infinite;
+  /* Ensure the text is solid so shadows stack properly underneath it */
+}
