@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { ReactLenis } from 'lenis/react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Loader } from '@react-three/drei';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import Header from './components/dom/Header';
 import Skills from './components/dom/Skills';
 import WorksGallery from './components/dom/WorksGallery';
@@ -115,6 +116,9 @@ function App() {
         {/* Custom Physics Cursor */}
         <CustomCursor />
       </ReactLenis>
+
+      {/* Vercel Speed Insights */}
+      <SpeedInsights />
 
       {/* Cinematic Hacker/Sci-Fi Boot Sequence  */}
       <Loader
