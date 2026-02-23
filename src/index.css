@@ -91,3 +91,21 @@ body {
   animation: glow3d 4s ease-in-out infinite;
   /* Ensure the text is solid so shadows stack properly underneath it */
 }
+
+/* Terminal Scrollbar */
+.terminal-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.terminal-scrollbar::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.terminal-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 208, 0.4);
+  border-radius: 4px;
+}
+
+.terminal-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 208, 0.8);
+}

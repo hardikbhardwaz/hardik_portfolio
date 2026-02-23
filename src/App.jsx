@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react';
 import { ReactLenis } from 'lenis/react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Loader } from '@react-three/drei';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import Header from './components/dom/Header';
 import Skills from './components/dom/Skills';
@@ -11,12 +10,16 @@ import Scene from './components/canvas/Scene';
 import CustomCursor from './components/dom/CustomCursor';
 import VelocityMarquee from './components/dom/VelocityMarquee';
 import Experience from './components/dom/Experience';
+import WorkExperience from './components/dom/WorkExperience';
 import KineticText from './components/dom/KineticText';
 import ScrollProgress from './components/dom/ScrollProgress';
 import PerimeterLights from './components/dom/PerimeterLights';
 import SystemStats from './components/dom/SystemStats';
+import AnimatedTitle from './components/dom/AnimatedTitle';
 import TerminalModule from './components/dom/TerminalModule';
 import GlitchText from './components/dom/GlitchText';
+import AILoader from './components/dom/AILoader';
+import AIChatBot from './components/dom/AIChatBot';
 
 function App() {
   const { scrollY } = useScroll();
@@ -46,14 +49,12 @@ function App() {
               <GlitchText text="SHARMA" as="span" className="block" />
             </motion.h1>
 
-            {/* Static Professional Text Strip (Fades out quickly) */}
+            {/* Animated Professional Text Strip (Fades out quickly) */}
             <motion.div
               style={{ opacity: useTransform(scrollY, [0, 400], [1, 0]) }}
-              className="relative w-fit px-8 py-3 bg-cyan-900/20 border border-cyan-500/30 backdrop-blur-md rounded-full mt-6"
+              className="relative w-[90%] md:w-[600px] px-4 py-2 bg-cyan-900/20 border border-cyan-500/30 backdrop-blur-md rounded-full mt-6 flex justify-center items-center"
             >
-              <p className="text-[10px] md:text-sm tracking-[0.4em] font-medium text-cyan-200 m-0 leading-none">
-                DIGITAL MARKETING & GRAPHIC/VIDEO DESIGNER
-              </p>
+              <AnimatedTitle />
             </motion.div>
           </div>
 
@@ -74,6 +75,9 @@ function App() {
               </div>
             </div>
           </div>
+
+          {/* Interactive Work Experience Timeline */}
+          <WorkExperience />
 
           {/* Epic Scrolling Marquee Break */}
           <VelocityMarquee />
@@ -121,19 +125,10 @@ function App() {
       <SpeedInsights />
 
       {/* Cinematic Hacker/Sci-Fi Boot Sequence  */}
-      <Loader
-        containerStyles={{ background: '#020202', zIndex: 9999999 }} // Massive z-index to cloak load
-        innerStyles={{ width: '400px', height: '2px', background: 'rgba(0, 255, 208, 0.1)' }} // Dim track
-        barStyles={{ background: '#00ffd0' }} // Cyan progress
-        dataInterpolation={(p) => `INITIALIZING OVERLOAD... ${p.toFixed(0)}%`}
-        dataStyles={{
-          color: '#00ffd0',
-          fontSize: '12px',
-          letterSpacing: '0.4em',
-          fontFamily: 'monospace',
-          textTransform: 'uppercase'
-        }}
-      />
+      <AILoader />
+
+      {/* Simulated Heuristic AI Chat Agent */}
+      <AIChatBot />
     </>
   );
 }

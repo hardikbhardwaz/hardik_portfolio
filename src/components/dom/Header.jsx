@@ -22,8 +22,9 @@ const Header = () => {
 
     return (
         <header className="fixed top-8 left-0 w-full z-50 flex justify-between items-start px-12 pointer-events-none mix-blend-difference text-white">
-            {/* Top Left Logo */}
-            <div className="pointer-events-auto cursor-pointer opacity-90 hover:opacity-100 transition-opacity mt-2 md:mt-3 flex items-center h-10 md:h-12">
+            {/* Top Left Logo & Text */}
+            <div className="pointer-events-auto cursor-pointer opacity-90 hover:opacity-100 transition-opacity mt-2 md:mt-3 flex items-center gap-3 md:gap-4 h-10 md:h-12">
+                <span className="font-bold tracking-[0.2em] md:tracking-[0.3em] text-xs md:text-sm hidden sm:block">PORTFOLIO</span>
                 <img
                     src="/hardik_logo.webp"
                     alt="Hardik Sharma Portfolio Logo"
