@@ -126,8 +126,8 @@ To deploy your own version:
 
 If you would like to work together or discuss a project, feel free to reach out.
 
-📧 Email: [your@email.com](hardikbhardwaz@gmail.com)
-🌐 Website: [https://yourdomain.com](https://hardiksharma-portfolio.vercel.app)
+📧 Email: [mail me for more info](hardikbhardwaz@gmail.com)
+🌐 Website: [My Website](https://hardiksharma-portfolio.vercel.app)
 
 ---
 
