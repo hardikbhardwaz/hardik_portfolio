@@ -52,7 +52,7 @@ const CustomCursor = () => {
         <div className="hidden md:block">
             {/* Outer Plasma Ring */}
             <motion.div
-                className="fixed top-0 left-0 rounded-full pointer-events-none z-[9999] mix-blend-difference"
+                className="fixed top-0 left-0 rounded-full pointer-events-none z-[99999] mix-blend-difference"
                 style={{
                     x: cursorXSpring,
                     y: cursorYSpring,
@@ -68,7 +68,7 @@ const CustomCursor = () => {
             />
             {/* Inner Precision Dot */}
             <motion.div
-                className="fixed top-0 left-0 rounded-full bg-white pointer-events-none z-[10000] mix-blend-difference"
+                className="fixed top-0 left-0 rounded-full bg-white pointer-events-none z-[100000] mix-blend-difference"
                 style={{
                     x: cursorXInner,
                     y: cursorYInner,

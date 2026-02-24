@@ -12,7 +12,7 @@ const projects = [
 
 const categories = ["Video Editing", "Graphic Design", "Web Development"];
 
-const ProjectCard = ({ project }) => {
+const ProjectCard = ({ project, onOpenAdvanced }) => {
     const cardRef = useRef(null);
     const videoRef = useRef(null);
 
@@ -48,6 +48,7 @@ const ProjectCard = ({ project }) => {
             transition={{ type: "spring", damping: 20, stiffness: 100 }}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
+            onClick={() => onOpenAdvanced && onOpenAdvanced(project.category)}
             className="group relative h-72 md:h-80 border border-white/10 bg-black/40 backdrop-blur-md rounded-xl overflow-hidden pointer-events-auto cursor-pointer flex flex-col justify-end p-5 md:p-8 shadow-2xl"
         >
             {/* The Parallax Container - Scaled up so we have room to move it Without showing empty space */}
@@ -88,7 +89,7 @@ const ProjectCard = ({ project }) => {
     );
 };
 
-const WorksGallery = () => {
+const WorksGallery = ({ onOpenAdvanced }) => {
     const [activeCategory, setActiveCategory] = useState(categories[0]);
 
     // Filter projects based on the active tab
@@ -123,7 +124,7 @@ const WorksGallery = () => {
             <motion.div layout className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 px-4 md:px-0 pb-32 border-b border-white/10 relative z-20">
                 <AnimatePresence mode="popLayout">
                     {filteredProjects.map((project) => (
-                        <ProjectCard key={project.id} project={project} />
+                        <ProjectCard key={project.id} project={project} onOpenAdvanced={onOpenAdvanced} />
                     ))}
                 </AnimatePresence>
             </motion.div>

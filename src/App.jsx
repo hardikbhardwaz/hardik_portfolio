@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
 import { ReactLenis } from 'lenis/react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { SpeedInsights } from '@vercel/speed-insights/react';
@@ -20,8 +20,10 @@ import TerminalModule from './components/dom/TerminalModule';
 import GlitchText from './components/dom/GlitchText';
 import AILoader from './components/dom/AILoader';
 import AIChatBot from './components/dom/AIChatBot';
+import AdvancedGallery from './components/dom/AdvancedGallery';
 
 function App() {
+  const [activeAdvancedCategory, setActiveAdvancedCategory] = useState(null);
   const { scrollY } = useScroll();
 
   // Visceral Hero Parallax (Falls backward into the void)
@@ -98,7 +100,7 @@ function App() {
               <p className="tracking-widest opacity-50 text-[10px] md:text-sm max-w-xl py-1 mb-6 md:mb-8">
                 EXPLORE THE TECHNICAL ARCHITECTURE BY DISCIPLINE
               </p>
-              <WorksGallery />
+              <WorksGallery onOpenAdvanced={(cat) => setActiveAdvancedCategory(cat)} />
             </div>
           </div>
 
@@ -129,6 +131,12 @@ function App() {
 
       {/* Simulated Heuristic AI Chat Agent */}
       <AIChatBot />
+
+      {/* Advanced Full-Screen Gallery Overlay (z-[10000]) */}
+      <AdvancedGallery
+        category={activeAdvancedCategory}
+        onClose={() => setActiveAdvancedCategory(null)}
+      />
     </>
   );
 }
