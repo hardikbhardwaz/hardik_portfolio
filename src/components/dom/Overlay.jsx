@@ -2,7 +2,7 @@ import React from 'react';
 
 const Overlay = ({ activePage }) => {
     return (
-        <div className="fixed inset-0 pointer-events-none z-20 flex flex-col justify-between p-8 md:p-12 overflow-hidden">
+        <div className="fixed inset-0 pointer-events-none z-20 flex flex-col justify-between p-4 md:p-8 lg:p-12 overflow-hidden">
 
             {/* Top Bar */}
             <header className="flex justify-between items-start w-full">
@@ -43,7 +43,7 @@ const Overlay = ({ activePage }) => {
                             <a href="#" className="hover:opacity-100 hover:text-[#ff00ff] transition-all transform hover:translate-x-2">{"->"} AI & AUTOMATION</a>
                         </nav>
 
-                        <button className="mt-8 border border-white/20 rounded-[2rem] px-8 py-3 text-[10px] tracking-widest text-center hover:bg-white/10 hover:border-white/40 transition-all w-fit backdrop-blur-md">
+                        <button className="mt-8 border border-white/20 rounded-[2rem] px-6 py-3 md:px-8 text-[9px] md:text-[10px] tracking-widest text-center hover:bg-white/10 hover:border-white/40 transition-all w-fit backdrop-blur-md">
                             ASK ME ANYTHING...
                         </button>
                     </div>

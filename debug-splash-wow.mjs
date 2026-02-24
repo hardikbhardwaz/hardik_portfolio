@@ -1,0 +1,39 @@
+import puppeteer from 'puppeteer';
+
+(async () => {
+    const browser = await puppeteer.launch({ headless: 'new' });
+    const page = await browser.newPage();
+    try {
+        await page.setViewport({ width: 1440, height: 900 });
+        await page.goto('http://localhost:5173/');
+        await new Promise(r => setTimeout(r, 6500)); 
+        
+        // 1. Splash Impact (yRatio ~ 0.70 -> squashing, expanding)
+        await page.evaluate(() => {
+            const terminal = document.getElementById('terminal-box');
+            if (terminal) {
+                const y = terminal.getBoundingClientRect().top + window.scrollY - (window.innerHeight * 0.70);
+                window.scrollTo({ top: y, behavior: 'instant' });
+            }
+        });
+        await new Promise(r => setTimeout(r, 600)); 
+        await page.screenshot({ path: '/Users/hardiksharma/.gemini/antigravity/brain/0cc064df-ddc1-4772-a3dc-cab85eccdd25/debug_splash_impact.webp' });
+        
+        // 2. High Altitude Spray (yRatio ~ 0.50 -> 15k particles everywhere)
+        await page.evaluate(() => {
+            const terminal = document.getElementById('terminal-box');
+            if (terminal) {
+                const y = terminal.getBoundingClientRect().top + window.scrollY - (window.innerHeight * 0.50);
+                window.scrollTo({ top: y, behavior: 'instant' });
+            }
+        });
+        await new Promise(r => setTimeout(r, 600)); 
+        await page.screenshot({ path: '/Users/hardiksharma/.gemini/antigravity/brain/0cc064df-ddc1-4772-a3dc-cab85eccdd25/debug_splash_mid.webp' });
+
+        console.log("High-Fidelity water splash screenshots captured.");
+    } catch (e) {
+        console.log('ERROR:', e);
+    } finally {
+        await browser.close();
+    }
+})();

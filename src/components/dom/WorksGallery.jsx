@@ -48,7 +48,7 @@ const ProjectCard = ({ project }) => {
             transition={{ type: "spring", damping: 20, stiffness: 100 }}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            className="group relative h-80 border border-white/10 bg-black/40 backdrop-blur-md rounded-xl overflow-hidden pointer-events-auto cursor-pointer flex flex-col justify-end p-8 shadow-2xl"
+            className="group relative h-72 md:h-80 border border-white/10 bg-black/40 backdrop-blur-md rounded-xl overflow-hidden pointer-events-auto cursor-pointer flex flex-col justify-end p-5 md:p-8 shadow-2xl"
         >
             {/* The Parallax Container - Scaled up so we have room to move it Without showing empty space */}
             <motion.div
@@ -120,7 +120,7 @@ const WorksGallery = () => {
             </div>
 
             {/* Dynamic Gallery Grid */}
-            <motion.div layout className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 pb-32 border-b border-white/10 relative z-20">
+            <motion.div layout className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8 px-4 md:px-0 pb-32 border-b border-white/10 relative z-20">
                 <AnimatePresence mode="popLayout">
                     {filteredProjects.map((project) => (
                         <ProjectCard key={project.id} project={project} />

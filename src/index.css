@@ -56,6 +56,17 @@ body {
   width: max-content;
 }
 
+/* Stylized Anime Water Wave Animation */
+@keyframes wave {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(50%);
+  }
+}
+
 /* Modern 3D Glowing Text Animation */
 @keyframes glow3d {
 

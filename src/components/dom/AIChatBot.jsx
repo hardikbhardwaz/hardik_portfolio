@@ -157,17 +157,29 @@ const AIChatBot = () => {
         try {
             // Attempt Gemini Generation
             if (genAI) {
-                const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+                // Use the modern API format with dedicated system instructions
+                const model = genAI.getGenerativeModel({
+                    model: "gemini-3.0-flash",
+                    systemInstruction: SYSTEM_PROMPT
+                });
 
-                // Construct conversation history for context
+                // Map UI chat history to Gemini's native 'contents' array structure
                 const history = messages
-                    .filter(m => !m.isTyping) // ignore temporary typing states
-                    .map(m => `${m.sender === 'USER' ? 'User' : 'Architect'}: ${m.text}`)
-                    .join('\n');
+                    .filter(m => !m.isTyping && m.sender !== 'SYS')
+                    .map(m => ({
+                        role: m.sender === 'USER' ? 'user' : 'model',
+                        parts: [{ text: m.text.replace(/^> /, '') }]
+                    }));
 
-                const prompt = `${SYSTEM_PROMPT}\n\nChat History:\n${history}\n\nUser: ${userMsg}\nArchitect:`;
+                // Start chat session with history
+                const chat = model.startChat({
+                    history: history,
+                    generationConfig: {
+                        maxOutputTokens: 200, // Keep responses snappy
+                    },
+                });
 
-                const result = await model.generateContent(prompt);
+                const result = await chat.sendMessage(userMsg);
                 const responseText = result.response.text();
 
                 setMessages(prev => [...prev, { sender: 'AI', text: responseText, isTyping: true }]);
@@ -222,7 +234,7 @@ const AIChatBot = () => {
     }, [messages.length]);
 
     return (
-        <div className="fixed bottom-6 right-6 z-[9999] font-mono flex flex-col items-end pointer-events-none">
+        <div className="fixed bottom-0 right-0 md:bottom-6 md:right-6 z-[9999] font-mono flex flex-col items-end pointer-events-none w-full md:w-auto">
 
             <AnimatePresence>
                 {isOpen && (
@@ -231,17 +243,18 @@ const AIChatBot = () => {
                         animate={{ opacity: 1, scale: 1, y: 0, x: 0 }}
                         exit={{ opacity: 0, scale: 0.9, y: 40, x: 20 }}
                         transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                        // CYBERPUNK CHAMFERED CONTAINER
-                        className="pointer-events-auto relative mb-6 w-[88vw] max-w-[420px] h-[500px] bg-black/85 backdrop-blur-xl flex flex-col"
+                        className="pointer-events-auto relative md:mb-6 w-full md:w-[88vw] md:max-w-[420px] h-[75vh] md:h-[500px] bg-black/95 md:bg-black/85 backdrop-blur-xl flex flex-col border-t md:border-none border-cyan-500/50"
                         style={{
-                            // Sci-Fi Angled Corners (Chamfer clip-path)
-                            clipPath: 'polygon(0% 12px, 12px 0%, calc(100% - 30px) 0%, 100% 30px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 30px 100%, 0% calc(100% - 30px))',
+                            // Responsive Clip Path: Flat top on mobile (sheet), Chamfered on Desktop
+                            clipPath: window.innerWidth < 768
+                                ? 'none'
+                                : 'polygon(0% 12px, 12px 0%, calc(100% - 30px) 0%, 100% 30px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 30px 100%, 0% calc(100% - 30px))',
                             boxShadow: 'inset 0 0 20px rgba(0, 255, 208, 0.2)'
                         }}
                     >
-                        {/* Glowing Edge Border Simulation */}
+                        {/* Glowing Edge Border Simulation (Desktop Only) */}
                         <div
-                            className="absolute inset-0 pointer-events-none"
+                            className="absolute inset-0 pointer-events-none hidden md:block"
                             style={{
                                 border: '1px solid rgba(0, 255, 208, 0.4)',
                                 clipPath: 'polygon(0% 12px, 12px 0%, calc(100% - 30px) 0%, 100% 30px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 30px 100%, 0% calc(100% - 30px))',
@@ -280,8 +293,8 @@ const AIChatBot = () => {
                                         </div>
                                         <div
                                             className={`text-xs md:text-sm whitespace-pre-wrap leading-relaxed relative ${msg.sender === 'USER'
-                                                    ? 'text-white/90 bg-white/5 border border-white/10 px-3 py-2'
-                                                    : 'text-cyan-100 drop-shadow-[0_0_5px_rgba(0,255,208,0.3)] border-l-2 border-cyan-500/50 pl-3 py-1'
+                                                ? 'text-white/90 bg-white/5 border border-white/10 px-3 py-2'
+                                                : 'text-cyan-100 drop-shadow-[0_0_5px_rgba(0,255,208,0.3)] border-l-2 border-cyan-500/50 pl-3 py-1'
                                                 }`}
                                         >
                                             {msg.sender === 'USER' && (
@@ -310,7 +323,7 @@ const AIChatBot = () => {
                         </div>
 
                         {/* Input Area */}
-                        <div className="p-4 bg-gradient-to-t from-cyan-950/40 to-transparent z-10">
+                        <div className="p-3 md:p-4 bg-gradient-to-t from-cyan-950/40 to-transparent z-10 pb-has-safe-area mt-auto">
                             <form onSubmit={handleSubmit} className="relative flex gap-2">
                                 <div
                                     className="flex-1 relative bg-black/60 border border-cyan-500/30 overflow-hidden flex items-center"
@@ -342,7 +355,7 @@ const AIChatBot = () => {
             </AnimatePresence>
 
             {/* HIGH-TECH GEOMETRIC TRIGGER BUTTON & "ASK ME ANYTHING" LABEL */}
-            <div className="relative flex items-center gap-4 pointer-events-auto">
+            <div className={`relative flex items-center gap-2 md:gap-4 pointer-events-auto p-4 md:p-0 ${isOpen ? 'hidden md:flex' : 'flex'}`}>
 
                 {/* Holographic "Ask Me Anything" Label (Hidden when open) */}
                 <AnimatePresence>
@@ -354,13 +367,13 @@ const AIChatBot = () => {
                             className="relative flex items-center cursor-pointer"
                             onClick={() => setIsOpen(!isOpen)}
                         >
-                            <div className="bg-cyan-950/60 border border-cyan-400/50 backdrop-blur-md px-4 py-2 text-[10px] font-bold tracking-widest text-cyan-200 uppercase drop-shadow-[0_0_10px_rgba(0,255,208,0.5)] animate-pulse"
+                            <div className="bg-cyan-950/60 border border-cyan-400/50 backdrop-blur-md px-3 py-1.5 md:px-4 md:py-2 text-[9px] md:text-[10px] font-bold tracking-widest text-cyan-200 uppercase drop-shadow-[0_0_10px_rgba(0,255,208,0.5)] animate-pulse"
                                 style={{ clipPath: 'polygon(0 0, calc(100% - 10px) 0, 100% 50%, calc(100% - 10px) 100%, 0 100%)' }}
                             >
                                 ASK ME ANYTHING
                             </div>
                             {/* Connecting Line segment */}
-                            <div className="w-4 h-[1px] bg-cyan-400/50"></div>
+                            <div className="w-2 md:w-4 h-[1px] bg-cyan-400/50"></div>
                         </motion.div>
                     )}
                 </AnimatePresence>
@@ -369,7 +382,7 @@ const AIChatBot = () => {
                     onClick={() => setIsOpen(!isOpen)}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="relative w-16 h-16 flex items-center justify-center group"
+                    className="relative w-12 h-12 md:w-16 md:h-16 flex items-center justify-center group"
                 >
                     {/* Outer Rotating Hexagon Hex */}
                     <motion.div

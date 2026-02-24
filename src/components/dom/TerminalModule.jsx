@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 
 const bootSequence = [
     "[SYS] INITIALIZING CORE OVERLOAD SECURE PROTOCOL v9.0.4",
@@ -19,9 +19,19 @@ const bootSequence = [
 
 const TerminalModule = () => {
     const containerRef = useRef(null);
+    const terminalRef = useRef(null);
     const isInView = useInView(containerRef, { once: true, margin: "-100px" });
     const [lines, setLines] = useState([]);
     const [isTyping, setIsTyping] = useState(false);
+
+    // Track scroll specifically within THIS terminal section
+    const { scrollYProgress } = useScroll({
+        target: terminalRef,
+        offset: ["start 82%", "start 35%"]
+    });
+
+    // Map scroll progress to the height of the water layer (0% to 100% to cover fully)
+    const waterHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
     useEffect(() => {
         if (!isInView) return;
@@ -54,8 +64,27 @@ const TerminalModule = () => {
     }, [isInView]);
 
     return (
-        <section ref={containerRef} className="w-full min-h-[80vh] flex items-center justify-center px-6 md:px-24 scroll-mt-32">
-            <div className="w-full max-w-5xl rounded-lg border border-cyan-500/30 bg-black/80 backdrop-blur-2xl overflow-hidden shadow-[0_0_50px_rgba(34,211,238,0.1)]">
+        <section ref={containerRef} id="terminal-module" className="w-full min-h-[80vh] flex items-center justify-center px-6 md:px-24 scroll-mt-32">
+            <div id="terminal-box" ref={terminalRef} className="relative w-full max-w-5xl rounded-lg border border-cyan-500/30 bg-black/80 backdrop-blur-2xl overflow-hidden shadow-[0_0_50px_rgba(34,211,238,0.1)]">
+
+                {/* --- DOM Water Fill Submersion Effect --- */}
+                <motion.div
+                    style={{ height: waterHeight }}
+                    className="absolute bottom-0 left-0 w-full z-20 pointer-events-none flex flex-col justify-end"
+                >
+                    {/* Stylized Demon Slayer Wavy Top Edge */}
+                    <div className="w-full overflow-hidden leading-none transform translate-y-[2px]">
+                        <svg className="relative block w-[200%] h-[40px] md:h-[60px] -ml-[50%] animate-[wave_4s_linear_infinite]"
+                            xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C52.16,104.28,103.87,112.55,155.8,110.15,212.79,107.54,267.44,79.54,321.39,56.44Z"
+                                className="fill-cyan-500/30 backdrop-blur-md drop-shadow-[0_-5px_15px_rgba(0,255,255,0.8)]"></path>
+                        </svg>
+                    </div>
+                    {/* Liquid Body (Fills from bottom) */}
+                    <div className="w-full flex-grow bg-cyan-500/10 backdrop-blur-md border-t border-cyan-400/30">
+                        <div className="absolute inset-0 bg-gradient-to-t from-cyan-900/50 to-transparent mix-blend-overlay"></div>
+                    </div>
+                </motion.div>
 
                 {/* Terminal Header Bar */}
                 <div className="w-full h-8 bg-gradient-to-r from-cyan-900/50 to-transparent border-b border-cyan-500/30 flex items-center px-4 gap-2">
@@ -70,7 +99,7 @@ const TerminalModule = () => {
                 </div>
 
                 {/* Terminal Window Content */}
-                <div className="p-4 md:p-10 font-mono text-[10px] md:text-sm lg:text-base leading-relaxed text-cyan-300 min-h-[300px] md:min-h-[400px]">
+                <div className="p-4 md:p-10 font-mono text-[8px] sm:text-[10px] md:text-sm lg:text-base leading-relaxed text-cyan-300 min-h-[300px] md:min-h-[400px] overflow-x-auto terminal-scrollbar w-full">
                     {lines.map((line, index) => (
                         <motion.div
                             key={index}
