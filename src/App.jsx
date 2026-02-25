@@ -117,11 +117,13 @@ function App() {
         </div>
 
         {/* Z-Index 0: WebGL Background (Lazy Loaded) */}
-        <div className="fixed inset-0 w-full h-[100dvh] pointer-events-none z-0 bg-[#050505]">
-          <Suspense fallback={null}>
-            <Scene />
-          </Suspense>
-        </div>
+        {!activeAdvancedCategory && (
+          <div className="fixed inset-0 w-full h-[100dvh] pointer-events-none z-0 bg-[#050505]">
+            <Suspense fallback={null}>
+              <Scene />
+            </Suspense>
+          </div>
+        )}
 
         {/* Aesthetic Vignette */}
         <div className="fixed inset-0 pointer-events-none" style={{
