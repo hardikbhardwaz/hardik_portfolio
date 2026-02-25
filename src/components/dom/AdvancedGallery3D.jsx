@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo, Suspense } from 'react';
+import React, { useRef, useState, useMemo, Suspense, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { ScrollControls, useScroll, Image, Text, Html } from '@react-three/drei';
 import * as THREE from 'three';
@@ -19,22 +19,8 @@ const VideoPlane = ({ url, position, index, total, title, onClick }) => {
     // Scale down massively on portrait mobile screens to stop clipping
     const scaleFactor = viewport.width < 5 ? 0.6 : 1;
 
-    // Initialize Video DOM Element exactly once
-    const videoTexture = useMemo(() => {
-        const vid = document.createElement('video');
-        vid.src = url;
-        vid.crossOrigin = "Anonymous";
-        vid.loop = true;
-        vid.muted = true;
-        vid.playsInline = true;
-        vid.preload = "none"; // Hard throttle network
-        videoRef.current = vid;
-        const texture = new THREE.VideoTexture(vid);
-        texture.minFilter = THREE.LinearFilter;
-        texture.magFilter = THREE.LinearFilter;
-        texture.format = THREE.RGBAFormat;
-        return texture;
-    }, [url]);
+    // Initialize Video DOM Element ONLY ON HOVER (Phase 51: GPU Decoder Unblock)
+    const [videoTexture, setVideoTexture] = useState(null);
 
     // Spring Physics on Hover
     useFrame((state, delta) => {
@@ -55,6 +41,25 @@ const VideoPlane = ({ url, position, index, total, title, onClick }) => {
         e.stopPropagation();
         setHovered(true);
         document.body.style.cursor = 'pointer';
+
+        // Phase 51: Lazy instantiate the hardware video decoder EXACTLY when needed
+        if (!videoRef.current) {
+            const vid = document.createElement('video');
+            vid.src = url;
+            vid.crossOrigin = "Anonymous";
+            vid.loop = true;
+            vid.muted = true;
+            vid.playsInline = true;
+            vid.preload = "auto";
+            videoRef.current = vid;
+
+            const texture = new THREE.VideoTexture(vid);
+            texture.minFilter = THREE.LinearFilter;
+            texture.magFilter = THREE.LinearFilter;
+            texture.format = THREE.RGBAFormat;
+            setVideoTexture(texture);
+        }
+
         if (videoRef.current) videoRef.current.play().catch(() => { });
     };
 
@@ -64,7 +69,7 @@ const VideoPlane = ({ url, position, index, total, title, onClick }) => {
         document.body.style.cursor = 'auto';
         if (videoRef.current) {
             videoRef.current.pause();
-            videoRef.current.currentTime = 0;
+            // Optional: videoRef.current.currentTime = 0; if you want it to restart
         }
     };
 
@@ -76,7 +81,12 @@ const VideoPlane = ({ url, position, index, total, title, onClick }) => {
                 onPointerOut={handlePointerOut}
             >
                 <planeGeometry args={[16 / 4, 9 / 4]} />
-                <meshBasicMaterial map={videoTexture} toneMapped={false} />
+                {videoTexture ? (
+                    <meshBasicMaterial map={videoTexture} toneMapped={false} />
+                ) : (
+                    // Default Black "Terminal" Slate when not hovered
+                    <meshBasicMaterial color="#0a0a0a" toneMapped={false} />
+                )}
 
                 {/* 3D Title rendered natively in WebGL */}
                 <Text
@@ -100,6 +110,22 @@ const ImagePlane = ({ url, position, index, title, onClick }) => {
     const meshRef = useRef();
     const [hovered, setHovered] = useState(false);
     const { viewport } = useThree();
+
+    // Phase 51: Asynchronously load textures into VRAM strictly outside of React Suspense
+    // This allows the Gallery to mount instantly at 60FPS while textures pop-in dynamically in the background.
+    const [texture, setTexture] = useState(null);
+    useEffect(() => {
+        const loader = new THREE.TextureLoader();
+        loader.load(
+            url,
+            (loadedTexture) => {
+                loadedTexture.colorSpace = THREE.SRGBColorSpace;
+                setTexture(loadedTexture);
+            },
+            undefined,
+            (err) => console.error("Texture Loading Error:", err)
+        );
+    }, [url]);
 
     const scaleFactor = viewport.width < 5 ? 0.6 : 1;
 
@@ -128,7 +154,13 @@ const ImagePlane = ({ url, position, index, title, onClick }) => {
     return (
         <group position={position} onClick={onClick}>
             <mesh ref={meshRef} onPointerOver={handlePointerOver} onPointerOut={handlePointerOut}>
-                <Image url={url} transparent opacity={0.9} scale={[(16 / 4) * scaleFactor, (9 / 4) * scaleFactor]} />
+                <planeGeometry args={[16 / 4, 9 / 4]} />
+                {texture ? (
+                    <meshBasicMaterial map={texture} transparent opacity={0.9} toneMapped={false} />
+                ) : (
+                    // Ghost outline wireframe while downloading 1080p textures
+                    <meshBasicMaterial color="#0a0a0a" wireframe={true} transparent opacity={0.3} toneMapped={false} />
+                )}
                 <Text
                     position={[0, -1.4 * scaleFactor, 0]}
                     fontSize={0.15 * scaleFactor}
