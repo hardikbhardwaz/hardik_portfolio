@@ -21,7 +21,7 @@ const Header = () => {
     const lineY = useTransform(scrollY, [0, 2000], [0, 15]);
 
     return (
-        <header className="fixed top-8 left-0 w-full z-50 flex justify-between items-start px-12 pointer-events-none mix-blend-difference text-white">
+        <header className="fixed top-8 left-0 w-full z-50 flex justify-between items-start px-6 md:px-12 pointer-events-none mix-blend-difference text-white">
             {/* Top Left Logo & Text */}
             <div className="pointer-events-auto cursor-pointer opacity-90 hover:opacity-100 transition-opacity mt-2 md:mt-3 flex items-center gap-3 md:gap-4 h-10 md:h-12">
                 <span className="font-bold tracking-[0.2em] md:tracking-[0.3em] text-xs md:text-sm hidden sm:block">PORTFOLIO</span>

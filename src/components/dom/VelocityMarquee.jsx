@@ -44,8 +44,8 @@ const ParallaxText = ({ children, baseVelocity = 100 }) => {
     const x = useTransform(baseX, (v) => `${wrap(-20, -45, v)}%`);
 
     return (
-        <div className="parity-marquee py-12 md:py-24 overflow-hiddenm-0 whitespace-nowrap flex flex-nowrap rotate-[-2deg] my-24 bg-green-500/10 border-y border-green-500/30 backdrop-blur-sm pointer-events-none origin-left shadow-[0_0_50px_rgba(0,255,128,0.1)]">
-            <motion.div className="flex whitespace-nowrap flex-nowrap font-black uppercase text-[10vw] leading-none tracking-tighter text-transparent stroke-text" style={{ x }}>
+        <div className="parity-marquee py-12 md:py-24 overflow-hidden m-0 whitespace-nowrap flex flex-nowrap rotate-[-2deg] my-12 md:my-24 bg-green-500/10 border-y border-green-500/30 backdrop-blur-sm pointer-events-none origin-left shadow-[0_0_50px_rgba(0,255,128,0.1)]">
+            <motion.div className="flex whitespace-nowrap flex-nowrap font-black uppercase text-[10vw] leading-none tracking-tighter text-transparent stroke-text" style={{ x, willChange: 'transform' }}>
                 {/* We map multiple children to ensure an infinite loop without clipping */}
                 <span className="block mr-[2vw]">{children} </span>
                 <span className="block mr-[2vw]">{children} </span>

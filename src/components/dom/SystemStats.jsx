@@ -26,7 +26,7 @@ const SystemStats = () => {
     }, []);
 
     return (
-        <div className="fixed bottom-8 left-12 z-50 pointer-events-none mix-blend-difference hidden lg:flex flex-col gap-1 text-[9px] md:text-[10px] tracking-[0.2em] font-mono text-cyan-400 opacity-70">
+        <div className="fixed bottom-24 left-6 md:bottom-32 md:left-12 z-50 pointer-events-none mix-blend-difference hidden lg:flex flex-col gap-1 text-[9px] md:text-[10px] tracking-[0.2em] font-mono text-cyan-400 opacity-70">
             {/* Pulsing Header */}
             <div className="flex items-center gap-2 mb-2">
                 <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />

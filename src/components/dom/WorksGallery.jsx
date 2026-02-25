@@ -2,12 +2,12 @@ import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 
 const projects = [
-    { id: 1, title: "Promotional Brand Anthem", category: "Video Editing", tech: "Adobe Premiere Pro, After Effects", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" },
-    { id: 2, title: "Social Media Identity", category: "Graphic Design", tech: "Adobe Photoshop, Canva", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4" },
-    { id: 3, title: "E-Commerce Storefront", category: "Web Development", tech: "Shopify, Elementor", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4" },
-    { id: 4, title: "AI-Generated Podcast", category: "Video Editing", tech: "SORA, Kling AI", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" },
-    { id: 5, title: "Corporate Branding", category: "Graphic Design", tech: "Adobe Photoshop, Branding Creatives", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" },
-    { id: 6, title: "High-Converting Landing Page", category: "Web Development", tech: "WordPress, HTML, CSS", video: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4" }
+    { id: 1, title: "Cement Bag Packaging Concept", category: "Graphic Design", tech: "Blender, Unreal Engine", video: "/works/rse_packaging.mp4" },
+    { id: 2, title: "Industrial Plant Operations", category: "Video Editing", tech: "Premiere Pro, DaVinci", video: "/works/rse_operations.mp4" },
+    { id: 3, title: "RS Enterprises Solutions", category: "Web Development", tech: "NextJS, TailwindCSS, React", image: "/works/rse_solution.jpg", link: "https://www.rsesolution.com" },
+    { id: 4, title: "Close-up Material Filling", category: "Video Editing", tech: "SORA, Kling AI", video: "/works/rse_filling.mp4" },
+    { id: 5, title: "Wide Shot Factory Integration", category: "Graphic Design", tech: "Adobe Photoshop, After Effects", video: "/works/rse_wide.mp4" },
+    { id: 6, title: "Click N Bliss Studio", category: "Web Development", tech: "WordPress, Elementor", image: "/works/clicknbliss.jpg", link: "https://www.clicknbliss.com" }
 ];
 
 const categories = ["Video Editing", "Graphic Design", "Web Development"];
@@ -48,7 +48,13 @@ const ProjectCard = ({ project, onOpenAdvanced }) => {
             transition={{ type: "spring", damping: 20, stiffness: 100 }}
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
-            onClick={() => onOpenAdvanced && onOpenAdvanced(project.category)}
+            onClick={() => {
+                if (project.link) {
+                    window.open(project.link, '_blank', 'noopener,noreferrer');
+                } else if (onOpenAdvanced) {
+                    onOpenAdvanced(project.category);
+                }
+            }}
             className="group relative h-72 md:h-80 border border-white/10 bg-black/40 backdrop-blur-md rounded-xl overflow-hidden pointer-events-auto cursor-pointer flex flex-col justify-end p-5 md:p-8 shadow-2xl"
         >
             {/* The Parallax Container - Scaled up so we have room to move it Without showing empty space */}
@@ -56,17 +62,25 @@ const ProjectCard = ({ project, onOpenAdvanced }) => {
                 className="absolute -inset-8 z-0 pointer-events-none"
                 style={{ y: parallaxY }}
             >
-                {/* Hardware Accelerated Background Video - AutoPlays only on Hover via Ref */}
-                {project.video && (
+                {/* Hardware Accelerated Background Video or Static Cover Image - AutoPlays only on Hover via Ref */}
+                {project.video ? (
                     <video
                         ref={videoRef}
                         src={project.video}
+                        preload="none"
                         muted
                         loop
                         playsInline
-                        className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-40 transition-opacity duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] mix-blend-screen"
+                        className="absolute inset-0 w-full h-full object-contain opacity-0 group-hover:opacity-60 transition-opacity duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] mix-blend-screen"
                     />
-                )}
+                ) : project.image ? (
+                    <img
+                        src={project.image}
+                        alt={project.title}
+                        loading="lazy"
+                        className="absolute inset-0 w-full h-full object-contain opacity-30 group-hover:opacity-80 transition-opacity duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] mix-blend-screen"
+                    />
+                ) : null}
 
                 {/* Futuristic Image Placeholder (Scanning gradient) */}
                 <div className="absolute inset-0 bg-gradient-to-t from-cyan-900/60 via-black/80 to-transparent z-10" />

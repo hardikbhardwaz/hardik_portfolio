@@ -2,46 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import KineticText from './KineticText';
 
-// Mockup Data for the Deep Archive
-const archiveData = {
-    "Video Editing": [
-        { id: 101, title: "Cyberpunk Action Reel", format: "16:9", type: "video" },
-        { id: 102, title: "Minimalist Product Promo", format: "9:16", type: "video" },
-        { id: 103, title: "Tech Documentary Cut", format: "16:9", type: "video" },
-        { id: 104, title: "Social Media Loop", format: "1:1", type: "video" },
-        { id: 105, title: "Music Video Edit", format: "21:9", type: "video" },
-    ],
-    "Graphic Design": [
-        { id: 201, title: "Brutalist Poster Series", format: "3:4", type: "image" },
-        { id: 202, title: "Tech Brand Identity", format: "16:9", type: "image" },
-        { id: 203, title: "App UI Typography", format: "9:16", type: "image" },
-        { id: 204, title: "Neon Cyber Logo", format: "1:1", type: "image" },
-    ],
-    "Web Development": [
-        { id: 301, title: "Awwwards Nominee Site", format: "16:9", type: "code" },
-        { id: 302, title: "WebGL Shader Experiment", format: "1:1", type: "code" },
-        { id: 303, title: "React Native App Dashboard", format: "9:16", type: "code" },
-    ],
-    "Digital Marketing": [
-        { id: 401, title: "Global Ad Campaign ROAS", format: "16:9", type: "chart" },
-        { id: 402, title: "SEO Growth Trajectory", format: "3:4", type: "chart" }
-    ],
-    "AI & Automation": [
-        { id: 501, title: "Neural Net Training Visualizer", format: "16:9", type: "video" }
-    ],
-    "AI Video & Graphics": [
-        { id: 601, title: "Midjourney Concept Art", format: "3:4", type: "image" }
-    ]
-};
+// Import the dynamically generated native asset pipeline payload
+import archiveData from '../../data/galleryManifest.json';
+
+// Ensure the Web Development array still exists with the original deployed URLs since it wasn't in the local scraped folder
+archiveData["Web Development"] = [
+    { id: 301, title: "RS Enterprises Solutions", format: "16:9", type: "website", image: "/works/rse_solution.jpg", link: "https://www.rsesolution.com" },
+    { id: 302, title: "Click N Bliss Studio", format: "16:9", type: "website", image: "/works/clicknbliss.jpg", link: "https://www.clicknbliss.com" }
+];
 
 // Map categories to descriptions
 const categoryDescriptions = {
     "Video Editing": "High-impact kinetic editing, utilizing aggressive temporal remapping, precision cuts, and cinematic color grading across Premiere and DaVinci.",
-    "Graphic Design": "Unforgiving aesthetic direction. I forge brand identities that cut through the noise using striking typography and high-contrast brutalist design.",
-    "Web Development": "Bleeding-edge reactive architecture. Building highly interactive 3D WebGL experiences and robust full-stack applications.",
-    "Digital Marketing": "Algorithmic domination. Data-driven growth frameworks designed to maximize engagement and conversion velocity.",
-    "AI & Automation": "Intelligent system architecture. Leveraging large language models and autonomous agents to eliminate manual latency.",
-    "AI Video & Graphics": "Synthetic media generation. Directing neural networks to render impossible visuals and cinematic latent-space animations."
+    "Graphic Design": "Grid-based brutalist layouts, high-contrast typography, and digital cyber-punk aesthetic compositions built strictly for high-fidelity retina displays.",
+    "Web Development": "Performant, hardware-accelerated WebGL architectures and scalable React node ecosystems built for elite user interaction and engagement.",
+    "Digital Marketing": "Data-driven systemic ROAS structures and algorithmic SEO pipelines designed to aggressively capture and convert high-intent global traffic.",
+    "AI & Automation": "Next-generation generative media and automated scraping nodes utilized to bypass human bottlenecks and scale artistic production matrices.",
+    "AI Video & Graphics": "Procedurally generated 3D environments and synthetic photography trained on custom latent checkpoints to produce impossible digital art."
 };
 
 const AdvancedGallery = ({ category, onClose }) => {
@@ -155,13 +132,33 @@ const AdvancedGallery = ({ category, onClose }) => {
                                     transition={{ duration: 0.6, delay: index * 0.1 }}
                                     className={`group relative rounded-2xl overflow-hidden border border-white/10 ${colSpan} ${rowSpan}`}
                                 >
-                                    {/* Placeholder Img/Gradient */}
-                                    <div
-                                        className="absolute inset-0 w-full h-full transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105"
-                                        style={{ background: getRandomGradient(item.id) }}
-                                    >
-                                        {/* Stylized Noise Overlay */}
-                                        <div className="absolute inset-0 opacity-20 mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")' }}></div>
+                                    {/* Native Media Pipeline: Optimized for Lazy Loading & Native Aspect Ratios */}
+                                    <div className="absolute inset-0 w-full h-full bg-[#050505] flex items-center justify-center overflow-hidden">
+                                        {item.type === 'video' && item.video ? (
+                                            <video
+                                                src={item.video}
+                                                preload="none"
+                                                controls={false}
+                                                loop
+                                                muted
+                                                playsInline
+                                                className="w-full h-full object-contain opacity-70 group-hover:opacity-100 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-[1.02]"
+                                                onMouseOver={(e) => { e.target.play().catch(() => { }); }}
+                                                onMouseOut={(e) => { e.target.pause(); }}
+                                            />
+                                        ) : item.type === 'image' && item.image ? (
+                                            <img
+                                                src={item.image}
+                                                alt={item.title}
+                                                loading="lazy"
+                                                className="w-full h-full object-contain opacity-70 group-hover:opacity-100 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-[1.02]"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full" style={{ background: getRandomGradient(item.id) }}></div>
+                                        )}
+
+                                        {/* Stylized Noise Overlay (Disabled pointer events to not block video hover) */}
+                                        <div className="absolute inset-0 opacity-20 mix-blend-overlay pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E")' }}></div>
                                     </div>
 
                                     {/* Content Payload - Appears on Hover */}
@@ -174,9 +171,19 @@ const AdvancedGallery = ({ category, onClose }) => {
                                                 {item.title}
                                             </h3>
 
-                                            <button className="mt-6 px-6 py-2 border border-cyan-400/50 rounded-full text-[10px] font-mono tracking-widest hover:bg-cyan-400 hover:text-black transition-colors backdrop-blur-md">
-                                                LOAD ASSET {'>'}
-                                            </button>
+                                            {item.type === 'drive' ? (
+                                                <button onClick={() => window.open(item.link, '_blank')} className="mt-6 px-6 py-2 border border-blue-500/50 rounded-full text-[10px] font-mono tracking-widest hover:bg-blue-500 hover:text-white transition-colors backdrop-blur-md pointer-events-auto shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+                                                    ACCESS SECURE DRIVE {'->'}
+                                                </button>
+                                            ) : item.link ? (
+                                                <button onClick={() => window.open(item.link, '_blank')} className="mt-6 px-6 py-2 border border-cyan-400/50 rounded-full text-[10px] font-mono tracking-widest hover:bg-cyan-400 hover:text-black transition-colors backdrop-blur-md pointer-events-auto">
+                                                    LAUNCH DEPLOYMENT {'->'}
+                                                </button>
+                                            ) : (
+                                                <button className="mt-6 px-6 py-2 border border-cyan-400/50 rounded-full text-[10px] font-mono tracking-widest hover:bg-cyan-400 hover:text-black transition-colors backdrop-blur-md pointer-events-auto">
+                                                    LOAD ASSET {'>'}
+                                                </button>
+                                            )}
                                         </div>
                                     </div>
 

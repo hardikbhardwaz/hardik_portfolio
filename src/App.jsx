@@ -1,26 +1,33 @@
-import React, { Suspense, useState } from 'react';
+import React, { Suspense, useState, lazy } from 'react';
 import { ReactLenis } from 'lenis/react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { SpeedInsights } from '@vercel/speed-insights/react';
 import Header from './components/dom/Header';
 import Skills from './components/dom/Skills';
 import WorksGallery from './components/dom/WorksGallery';
 import FooterReveal from './components/dom/FooterReveal';
-import Scene from './components/canvas/Scene';
 import CustomCursor from './components/dom/CustomCursor';
-import VelocityMarquee from './components/dom/VelocityMarquee';
 import Experience from './components/dom/Experience';
 import WorkExperience from './components/dom/WorkExperience';
-import KineticText from './components/dom/KineticText';
+
+// -------------------------------------------------------------
+// EXTREME LAZY LOADING ARCHITECTURE (Phase 47)
+// Isolates mathematically intense physics/WebGL components from 
+// the main thread to guarantee instant DOM paint & initial TTI.
+// -------------------------------------------------------------
+const VelocityMarquee = lazy(() => import('./components/dom/VelocityMarquee'));
+const KineticText = lazy(() => import('./components/dom/KineticText'));
+const Scene = lazy(() => import('./components/canvas/Scene'));
+const AILoader = lazy(() => import('./components/dom/AILoader'));
+const AIChatBot = lazy(() => import('./components/dom/AIChatBot'));
+const AdvancedGallery3D = lazy(() => import('./components/dom/AdvancedGallery3D'));
 import ScrollProgress from './components/dom/ScrollProgress';
 import PerimeterLights from './components/dom/PerimeterLights';
 import SystemStats from './components/dom/SystemStats';
 import AnimatedTitle from './components/dom/AnimatedTitle';
 import TerminalModule from './components/dom/TerminalModule';
 import GlitchText from './components/dom/GlitchText';
-import AILoader from './components/dom/AILoader';
-import AIChatBot from './components/dom/AIChatBot';
-import AdvancedGallery from './components/dom/AdvancedGallery';
+import DriveButton from './components/dom/DriveButton';
+import GlobalErrorBoundary from './components/dom/GlobalErrorBoundary';
 
 function App() {
   const [activeAdvancedCategory, setActiveAdvancedCategory] = useState(null);
@@ -33,11 +40,12 @@ function App() {
 
   return (
     <>
-      <ReactLenis root options={{ lerp: 0.05, smoothWheel: true }}>
+      <ReactLenis root options={{ lerp: 0.035, wheelMultiplier: 1.1, touchMultiplier: 2, smoothWheel: true }}>
         <PerimeterLights />
         <ScrollProgress />
         <SystemStats />
         <Header />
+        <DriveButton />
         {/* New combined DOM content */}
         <div className="w-full relative z-10 text-white mix-blend-difference pointer-events-none">
           {/* Hero space - Perfectly centered and slightly elevated */}
@@ -45,7 +53,7 @@ function App() {
             {/* Main Name pushed into Z-depth on scroll */}
             <motion.h1
               style={{ y: heroY, scale: heroScale, opacity: heroOpacity }}
-              className="text-6xl md:text-[10vw] font-black tracking-tighter leading-[0.85] text-center text-3d-glow flex flex-col items-center"
+              className="text-[15vw] md:text-[10vw] font-black tracking-tighter leading-[0.85] text-center text-3d-glow flex flex-col items-center"
             >
               <GlitchText text="HARDIK" as="span" className="block" />
               <GlitchText text="SHARMA" as="span" className="block" />
@@ -108,10 +116,12 @@ function App() {
           <FooterReveal />
         </div>
 
-        {/* 3D Canvas Layer (Strictly background) */}
-        <Suspense fallback={null}>
-          <Scene />
-        </Suspense>
+        {/* Z-Index 0: WebGL Background (Lazy Loaded) */}
+        <div className="fixed inset-0 w-full h-[100dvh] pointer-events-none z-0 bg-[#050505]">
+          <Suspense fallback={null}>
+            <Scene />
+          </Suspense>
+        </div>
 
         {/* Aesthetic Vignette */}
         <div className="fixed inset-0 pointer-events-none" style={{
@@ -123,22 +133,30 @@ function App() {
         <CustomCursor />
       </ReactLenis>
 
-      {/* Vercel Speed Insights */}
-      <SpeedInsights />
+      {/* Phase 47: Asynchronous Ecosystem Boundary */}
+      <Suspense fallback={null}>
+        {/* Cinematic Hacker/Sci-Fi Boot Sequence  */}
+        <AILoader />
 
-      {/* Cinematic Hacker/Sci-Fi Boot Sequence  */}
-      <AILoader />
+        {/* Simulated Heuristic AI Chat Agent */}
+        <AIChatBot />
 
-      {/* Simulated Heuristic AI Chat Agent */}
-      <AIChatBot />
-
-      {/* Advanced Full-Screen Gallery Overlay (z-[10000]) */}
-      <AdvancedGallery
-        category={activeAdvancedCategory}
-        onClose={() => setActiveAdvancedCategory(null)}
-      />
+        {/* Advanced Full-Screen 3D WebGL Gallery Overlay (z-[10000]) */}
+        {activeAdvancedCategory && (
+          <AdvancedGallery3D
+            category={activeAdvancedCategory}
+            onClose={() => setActiveAdvancedCategory(null)}
+          />
+        )}
+      </Suspense>
     </>
   );
 }
 
-export default App;
+export default function AppWithErrorBoundary() {
+  return (
+    <GlobalErrorBoundary>
+      <App />
+    </GlobalErrorBoundary>
+  );
+}

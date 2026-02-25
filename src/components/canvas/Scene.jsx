@@ -37,7 +37,7 @@ const Scene = () => {
             <Canvas
                 camera={{ position: [0, 0, 45], fov: 60, near: 0.1, far: 2000 }}
                 gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
-                dpr={[1, 1.5]} // Capped at 1.5 to prevent massive VRAM exhaustion on 4K Retina Mac displays
+                dpr={[1, 1.2]} // Capped tightly at 1.2 to drastically boost FPS on 4K Retina Mac displays
                 className="pointer-events-auto"
             >
                 {/* Pure deep black background for contrast against the bright fluid */}

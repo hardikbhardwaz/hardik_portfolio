@@ -45,7 +45,7 @@ const KineticText = ({ text, className, delay = 0 }) => {
                     <span key={index} className="inline-block overflow-hidden mr-2 md:mr-4 last:mr-0">
                         {word.split("").map((char, index) => {
                             return (
-                                <motion.span key={index} className="inline-block origin-bottom" variants={letter}>
+                                <motion.span key={index} className="inline-block origin-bottom" variants={letter} style={{ willChange: 'transform, opacity' }}>
                                     {char}
                                 </motion.span>
                             );
