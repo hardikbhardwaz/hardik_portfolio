@@ -254,7 +254,7 @@ const AdvancedGallery3D = ({ category, onClose }) => {
                 {/* Massive 3D Canvas */}
                 <Canvas
                     camera={{ position: [0, 0, 5], fov: 45 }}
-                    dpr={[1, 1.5]}
+                    dpr={[1, 1.2]}
                     gl={{ antialias: true, powerPreference: "high-performance" }}
                 >
                     <color attach="background" args={['#050505']} />

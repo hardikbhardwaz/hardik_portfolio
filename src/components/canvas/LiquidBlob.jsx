@@ -25,7 +25,7 @@ const LiquidBlob = () => {
     const geometry = useMemo(() => new THREE.IcosahedronGeometry(12, 32), []);
 
     // Phase 36: Realistic Fluid Splash (Points System)
-    const SPLASH_PARTICLES = 15000;
+    const SPLASH_PARTICLES = 2500;
     const pointsRef = useRef();
 
     // Circular drop texture for realistic water spray
@@ -301,7 +301,7 @@ const LiquidBlob = () => {
                             vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
                             
                             // Size attenuation so particles get smaller further away
-                            gl_PointSize = 150.0 / -mvPosition.z; 
+                            gl_PointSize = 400.0 / -mvPosition.z; 
                             gl_Position = projectionMatrix * mvPosition;
                             
                             // Fade opacity based on progress settling into water
